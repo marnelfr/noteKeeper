@@ -51,8 +51,7 @@ We can have
     - ratio-based size and positioning
     - Group size/position distribution known as chains.
     - do weighted relationships (e.g. a centered item but slightly to the left.)
-    - guideline-based size/position where view elements are visible at runtime, but they are used to allow users to control positioning within screens.
-    
+    - guideline-based size/position where view elements are visible at runtime, but they are used to allow users to control positioning within screens.\
 When using it ach view should generally have 
     - at least one horizontal and vertical constraint otherwise, it ends up positioned at 0, 0
     - can set more than one of each (e.g. one on the left side and another on the right side in order to center the view)\
