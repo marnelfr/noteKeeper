@@ -13,7 +13,7 @@ Higher API levels are newer and therefore provides more features.\
 The cumulative distribution percentage information shown on the helping screen when creating a new app is not up to date as information provided at [Android Dashboard](https://bit.ly/adroiddashboards)
 
 ## Activity
-According to the android documentation, an activity is a single, focused thing that a user can do.\
+According to the android documentation, **an activity is a single, focused thing that a user can do**.\
 > They serve as the place to present a User Interface (UI) 
 >> Provide a window 
 >> UI is built within that window using a series of classes derived from the base class View.
@@ -29,12 +29,17 @@ There are many specialized classes available.
 **ViewGroup:** it's a special kind of view that holds other views.
 **Layout:** a derived class of **ViewGroup**'s class used to holds other views. They are **special invisible ViewGroup**. 
 They handle View positioning behavior. We've got many specialized classes available.
+**fab**: floating action buttons
+
 
 ## Layout Classes
 The activity UIs of an application need to be responsive because device display characteristics vary. So UI must adapt.
 Absolute positioning would be limiting. For this purpose, we've got **Layout classes** that provide positioning flexibility. 
 - They are responsible to arrange their child views which can also be other layout classes,
 - The specific positioning behavior depends on the layout class we're dealing with.
+
+### Layout properties
+- **layout_with/_height** wrap_content (fixed with) or match_constraints (width based on constraints)
 
 ### Common Layout Classes
 - **FrameLayout:** provides a blocked-out area and generally has only one direct child.
@@ -62,11 +67,37 @@ So setting constraints within the designer,
     - we can drag circles at the midline of the box to create constraint relationship.
     - we can drag squares that that box has at its corners to set fixed sizing within the designer
  
+## Activity/Layout Relationship
+It can be create **programmatically** 
+- Using Java code to create class instance and 
+- Where relationships and properties will be set in code.\
+But actually, we mostly use layout files where
+- XML files describe View hierarchy
+- Usually created using the Android Studio UI Designer
+
+But there is no implicit relationship between an activity and a layout.\
+**setContentView**: method used by an activity to explicitly load the layout resource it wants to work on.\
+Once the layout is loaded, the activity must request references to its views using the `findViewById` method. 
+This last method require a parameter (layout file resource or item's id value) provided by the **R class**, a generated class. It contains nested classes.
+The most useful are 
+- **R.layout** to load the layout files. It owns an public int attribute for each layout in the project named as it
+- **R.id** to load the layout resources. It owns an public int attribute for each view in the project named as it that give us back a reference to it.
+    - They return a **NullRefernceException** when the layout or id require doesn't exist.
 
 
-
-
-
+## Spinners
+They have two identities:
+- The first part that shows the current selection,
+- The second part, an area, that's opens up when user type on the spinner's triangle.
+For this purpose, they do need to have layouts associated with them. 
+- One used to format the current selection 
+- Another one to format each of the available selections.
+So populating a spinner require 3 tasks: getting data across and managing each of those layouts.
+That's where **Adapter** come out since they are responsible for doing 
+the work of moving the data over and managing each of those layouts.\
+There are different kinds of adapters available: 
+- Some manage in-memory data sources like arrays or lists
+- Other manage database sources that use cursors.
 
 
 
