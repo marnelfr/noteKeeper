@@ -1,4 +1,5 @@
-## NoteKeeper
+# NoteKeeper
+
 When talking about views, the term attributes and the term properties are often used interchangeably.\
 The terms Emulator, Android Virtual Device, and AVD all refer to the same thing.
 
@@ -42,20 +43,21 @@ Absolute positioning would be limiting. For this purpose, we've got **Layout cla
 We can even specify the among of space that a specific item will use and the remaining areas will be divided for others.
 - **RelativeLayout:** provides relative positioning that can be relative to one another or to a parent. **It's not use anymore**.
 
-#### New released Layout classes
+
+### New released Layout classes
 - **ConstraintLayout:** it's a extremely flexible layout class. 
 And it often the only layout class needed. It's has a first-class design-time experience. 
-It closely integrated with the Android Studio Designer. It uses constraints leverage by its children.\
-We can have 
+It closely integrated with the Android Studio Designer. It uses constraints leverage by its children.
+1. We can have 
     - relative size and positioning 
     - ratio-based size and positioning
     - Group size/position distribution known as chains.
     - do weighted relationships (e.g. a centered item but slightly to the left.)
-    - guideline-based size/position where view elements are visible at runtime, but they are used to allow users to control positioning within screens.\
-When using it ach view should generally have 
+    - guideline-based size/position where view elements are visible at runtime, but they are used to allow users to control positioning within screens.
+1. When using it each view should generally have 
     - at least one horizontal and vertical constraint otherwise, it ends up positioned at 0, 0
-    - can set more than one of each (e.g. one on the left side and another on the right side in order to center the view)\
-When setting constraints with the designer, views will have a box around them allowing us to interact with them easily within the designer.\
+    - but we can set more than one of each (e.g. one on the left side and another on the right side in order to center the view).
+1. When setting constraints with the designer, views will have a box around them allowing us to interact with them easily within the designer.\
 So setting constraints within the designer, 
     - we can drag circles at the midline of the box to create constraint relationship.
     - we can drag squares that that box has at its corners to set fixed sizing within the designer
