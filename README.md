@@ -89,10 +89,12 @@ The most useful are
 They have two identities:
 - The first part that shows the current selection,
 - The second part, an area, that's opens up when user type on the spinner's triangle.
+
 For this purpose, they do need to have layouts associated with them. 
 - One used to format the current selection 
 - Another one to format each of the available selections.
-So populating a spinner require 3 tasks: getting data across and managing each of those layouts.
+
+So populating a spinner require 3 tasks: getting data across and managing each of those layouts.\
 That's where **Adapter** come out since they are responsible for doing 
 the work of moving the data over and managing each of those layouts.\
 There are different kinds of adapters available: 
