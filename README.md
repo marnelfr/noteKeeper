@@ -102,6 +102,18 @@ There are different kinds of adapters available:
 - Other manage database sources that use cursors.
 
 
+## Activity Interaction
+Android is a component-oriented platform and have a number of different types of component.
+The most familiar are Activities. They are, like others component, distinct from one another. 
+This means that an activity can't directly create another activity. To do so, 
+- it has to create an intent;
+- that intent will identify the desired activity using generally class' information for that activity;
+- launch the activity matching the intent by calling the **startActivity** which receive the intent. 
+
+E.g.: Passing from NoteListActivity to NoteActivity when the user click on a note will be like:
+> The NoteListActivity will create an intent and call startActivity which will then start our NoteActivity. 
+
+
 
 
 
