@@ -113,8 +113,21 @@ This means that an activity can't directly create another activity. To do so,
 E.g.: Passing from NoteListActivity to NoteActivity when the user click on a note will be like:
 > The NoteListActivity will create an intent and call startActivity which will then start our NoteActivity. 
 
+## The manifest
+The **AndroidManifest.xml** describe the application and its components. Its content start by the **application** element.\
+Within the **application element**, we describe the components within the application.
+Each Activity is presented by an **activity element**.
 
+The one with the **intent-filter** is indicated to be the launcher activity and then causes 
+an icon for it to appear in the application launcher. That's mean will have as a lot of 
+icons for our application as a lot of launcher activities. But normally, we'll have only one like that.
 
+The **label** of activities does a couple of things.
+In case of the launcher activity, it affects the text that appears next to the launcher icon.
+For other activities, it affects the text that appears at the top of the activity.
+
+**String resources** allow storing string values separate from where they are referenced. 
+Using them avoid us to directly insert our string value in the _manifest_.
 
 
 
