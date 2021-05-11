@@ -1,5 +1,6 @@
 package com.jwhh.notekeeper;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -36,8 +37,7 @@ public class NoteListActivity extends AppCompatActivity {
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener((view) -> {
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            startActivity(new Intent(NoteListActivity.this, NoteActivity.class));
         });
 
         initializeDisplayContent();
@@ -45,14 +45,20 @@ public class NoteListActivity extends AppCompatActivity {
 
     private void initializeDisplayContent() {
         ListView listNotes = findViewById(R.id.list_notes);
+
         List<NoteInfo> notes = DataManager.getInstance().getNotes();
         ArrayAdapter<NoteInfo> adapterNotes = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, notes);
+
         listNotes.setAdapter(adapterNotes);
 
         listNotes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                Intent intent = new Intent(NoteListActivity.this, NoteActivity.class);
+                ListView list = (ListView) parent;
+                NoteInfo note = (NoteInfo) list.getItemAtPosition(position);
+                intent.putExtra(NoteActivity.NOTE_INFO, note);
+                startActivity(intent);
             }
         });
     }

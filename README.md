@@ -48,7 +48,6 @@ Absolute positioning would be limiting. For this purpose, we've got **Layout cla
 We can even specify the among of space that a specific item will use and the remaining areas will be divided for others.
 - **RelativeLayout:** provides relative positioning that can be relative to one another or to a parent. **It's not use anymore**.
 
-
 ### New released Layout classes
 - **ConstraintLayout:** it's a extremely flexible layout class. 
 And it's often the only layout class needed. It's has a first-class design-time experience. 
@@ -155,22 +154,36 @@ reason why intents must be cross-process friendly. That why we have limited allo
 
 But fundamentally, most reference types are not directly supported. They need to be **flattened** 
 meaning **converted to a bunch of bytes** or make it _wire friendly_. 
-This can be done using **Java serialization**. Although, serialization is very runtime expensive while very easy to implement.\
+This can be done using **Java serialization**. Although, serialization is very runtime expensive while very easy to implement.
+
 A better way to do so is using **Parcelable API** which is much more efficient than serialization 
 but a bit more complicated to implement. This is because we have to explicitly implement the behavior by these steps:
-- Implementing the Parcelable interface which has 2 methods:
-    - **describeContents** used to indicate any special behaviors our parceling may require. It generally just return 0.
-    - **writeToParcel** receives a **Parcel instance** and use **Parcel.writeXX** to store content from our object.
+1. The class must implement the **Parcelable** interface which has 2 methods:
+    - **describeContents** which is used to indicate any special behaviors our parceling may require. It generally just return 0.
+    - **writeToParcel** receives a **Parcel instance** and use **Parcel.writeXX** to store content from our object.\
+    **E.g.**: 
+        - parcel.writeString(stringVariable);
+        - parcel.writeParcelable(referenceVariable, 0);
+        - parcel.writeByte((byte)(booleanVariable ? 1 : 0));
+        - parcel.writeTypedList(listVariable);
 
-- Provide a public static final CREATOR field that must be of type **Parcelable.Creator** meaning 
+- Provide a public static final CREATOR field that must be of type **Parcelable.Creator<OurClass>** meaning 
 that it is an implementation of the interface **Parcelable.Creator** that has two methods:
+    - **newArray**: receive a size and is responsible to create an array of type of the specified size.\
+Generally, this is done using an anonymous  class.
     - **createFromParcel** responsible to create a new instance of our type so it receive a reference to a 
 Parcel instance and use the **Parcel.readXX** methods to access content and set the values inside of our type.
-    - **newArray**: receive a size and is responsible to create an array of type of the specified size.     
-    
+Here, we use a private constructor of our class to implement this method.\
+    **E.g.**:
+        - stringVariable = parcel.readString();
+        - referenceVariable = parcel.readParcelable(ReferenceClass.class.getClassLoader());
+        - booleanVariable = source.readByte() == 1;
+        - listOfReferenceVariable = new ArrayList<>(); source.readTypedList(listOfReferenceVariable, ReferenceClass.CREATOR);
 
 
-
+**Parcel values must be accessed in the sae order they were written** because values written in a Parcel have no identify but an order.\
+**A class loader provides information on how to create instances of a type**
+**When making a type parcelable, all contained reference types must also be parcelable**
 
 
 

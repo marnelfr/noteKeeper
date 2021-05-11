@@ -3,7 +3,7 @@ package com.jwhh.notekeeper;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public final class ModuleInfo implements Parcelable {
+public final class ModuleInfo implements Parcelable{
     private final String mModuleId;
     private final String mTitle;
     private boolean mIsComplete = false;
@@ -64,26 +64,28 @@ public final class ModuleInfo implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
+    /*
+        private final String mModuleId;
+        private final String mTitle;
+        private boolean mIsComplete = false;
+    */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(mModuleId);
         dest.writeString(mTitle);
-        dest.writeByte((byte)(mIsComplete ? 1 : 0));
+        dest.writeByte(((byte)(mIsComplete ? 1 : 0)));
     }
 
-    public static final Creator<ModuleInfo> CREATOR =
-            new Creator<ModuleInfo>() {
+    public static final Parcelable.Creator<ModuleInfo> CREATOR = new Parcelable.Creator<ModuleInfo>(){
 
-                @Override
-                public ModuleInfo createFromParcel(Parcel source) {
-                    return new ModuleInfo(source);
-                }
+        @Override
+        public ModuleInfo createFromParcel(Parcel source) {
+            return new ModuleInfo(source);
+        }
 
-                @Override
-                public ModuleInfo[] newArray(int size) {
-                    return new ModuleInfo[size];
-                }
-            };
-
+        @Override
+        public ModuleInfo[] newArray(int size) {
+            return new ModuleInfo[size];
+        }
+    };
 }
