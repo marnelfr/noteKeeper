@@ -13,7 +13,7 @@ Higher API levels are newer and therefore provides more features.\
 The cumulative distribution percentage information shown on the helping screen when creating a new app is not up to date as information provided at [Android Dashboard](https://bit.ly/adroiddashboards)
 
 ## Activity
-According to the android documentation, **an activity is a single, focused thing that a user can do**.\
+According to the android documentation, **an activity is a single, focused thing that a user can do**.
 > They serve as the place to present a User Interface (UI) 
 >> Provide a window 
 >> UI is built within that window using a series of classes derived from the base class View.
@@ -39,7 +39,7 @@ Absolute positioning would be limiting. For this purpose, we've got **Layout cla
 - The specific positioning behavior depends on the layout class we're dealing with.
 
 ### Layout properties
-- **layout_with/_height** wrap_content (fixed with) or match_constraints (width based on constraints)
+- **layout_width/_height** wrap_content (fixed with) or match_constraints (width based on constraints)
 
 ### Common Layout Classes
 - **FrameLayout:** provides a blocked-out area and generally has only one direct child.
@@ -158,14 +158,15 @@ This can be done using **Java serialization**. Although, serialization is very r
 
 A better way to do so is using **Parcelable API** which is much more efficient than serialization 
 but a bit more complicated to implement. This is because we have to explicitly implement the behavior by these steps:
+
 1. The class must implement the **Parcelable** interface which has 2 methods:
     - **describeContents** which is used to indicate any special behaviors our parceling may require. It generally just return 0.
     - **writeToParcel** receives a **Parcel instance** and use **Parcel.writeXX** to store content from our object.\
     **E.g.**: 
-        - parcel.writeString(stringVariable);
-        - parcel.writeParcelable(referenceVariable, 0);
-        - parcel.writeByte((byte)(booleanVariable ? 1 : 0));
-        - parcel.writeTypedList(listVariable);
+        - parcel.**writeString**(stringVariable);
+        - parcel.**writeParcelable**(referenceVariable, 0);
+        - parcel.**writeByte**((byte)(booleanVariable ? 1 : 0));
+        - parcel.**writeTypedList**(listVariable);
 
 - Provide a public static final CREATOR field that must be of type **Parcelable.Creator<OurClass>** meaning 
 that it is an implementation of the interface **Parcelable.Creator** that has two methods:
@@ -175,10 +176,10 @@ Generally, this is done using an anonymous  class.
 Parcel instance and use the **Parcel.readXX** methods to access content and set the values inside of our type.
 Here, we use a private constructor of our class to implement this method.\
     **E.g.**:
-        - stringVariable = parcel.readString();
-        - referenceVariable = parcel.readParcelable(ReferenceClass.class.getClassLoader());
-        - booleanVariable = source.readByte() == 1;
-        - listOfReferenceVariable = new ArrayList<>(); source.readTypedList(listOfReferenceVariable, ReferenceClass.CREATOR);
+        - stringVariable = parcel.**readString**();
+        - referenceVariable = parcel.**readParcelable**(ReferenceClass.class.getClassLoader());
+        - booleanVariable = source.**readByte**() == 1;
+        - listOfReferenceVariable = new ArrayList<>(); source.**readTypedList**(listOfReferenceVariable, ReferenceClass.CREATOR);
 
 
 **Parcel values must be accessed in the sae order they were written** because values written in a Parcel have no identify but an order.\
