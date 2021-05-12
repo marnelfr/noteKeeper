@@ -1,5 +1,7 @@
 # NoteKeeper
 
+**Avoid using magic value in your code**: always declare them as **constant**
+
 When talking about views, the term attributes and the term properties are often used interchangeably.\
 The terms Emulator, Android Virtual Device, and AVD all refer to the same thing.
 
@@ -145,6 +147,8 @@ This returned intent has a series of **getXXXExtra** methods that allow us to re
 - getIntExtra
 - getStringExtra
 
+**Extras that are value-types require a second argument that provides a default value**
+
 Intent can travel outside of our process (application) and out to an activity in a different process. That the 
 reason why intents must be cross-process friendly. That why we have limited allowable extras which are:
 - Primitive types and String
@@ -181,11 +185,19 @@ Here, we use a private constructor of our class to implement this method.\
         - listOfReferenceVariable = new ArrayList<>(); source.readTypedList(listOfReferenceVariable, ReferenceClass.CREATOR);
 
 
-**Parcel values must be accessed in the sae order they were written** because values written in a Parcel have no identify but an order.\
+**Parcel values must be accessed in the same order they were written** because values written in a Parcel have no identify but an order.\
 **A class loader provides information on how to create instances of a type**
 **When making a type parcelable, all contained reference types must also be parcelable**
 
+## Application Activity Relationship
+Android is component-platform based.
+But those components (activities) run in process and we've got one process per application. 
+So when the user start an application, its process it started first and the activity is started within it.
+And any other activity require by the app will be started in the same process. Once there is no more activity running,
+the process itself will exist. 
 
+Now, in the same process, there is no always the need to use parcelable to send info cross activity if those 
+activity can access the same DataManager (Unless I didn't get it well :').)
 
 
 

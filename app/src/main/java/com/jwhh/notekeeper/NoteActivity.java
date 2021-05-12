@@ -6,12 +6,6 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import androidx.appcompat.widget.Toolbar;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-
-import com.jwhh.notekeeper.databinding.ActivityNoteBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,7 +19,8 @@ public class NoteActivity extends AppCompatActivity {
 
 //    private AppBarConfiguration appBarConfiguration;
 //    private ActivityNoteBinding binding;
-    public static final String NOTE_INFO = "com.jwhh.notekeeper.NOTE_INFO";
+    public static final String NOTE_POSITION = "com.jwhh.notekeeper.NOTE_POSITION";
+    public static final int POSITION_NOT_SET = -1;
     private NoteInfo mNote;
     private Boolean mIsNewNote;
 
@@ -76,8 +71,10 @@ public class NoteActivity extends AppCompatActivity {
      */
     private void readDisplayStateValues() {
         Intent intent = getIntent();
-        mNote = intent.getParcelableExtra(NOTE_INFO);
-        mIsNewNote = mNote == null;
+        int position = intent.getIntExtra(NOTE_POSITION, POSITION_NOT_SET);
+        mIsNewNote = position == POSITION_NOT_SET;
+        if (!mIsNewNote)
+            mNote = DataManager.getInstance().getNotes().get(position);
     }
 
     @Override
