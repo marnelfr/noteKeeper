@@ -54,6 +54,18 @@ public class NoteActivity extends AppCompatActivity {
             displayNotes(mSpinnerCourses, mTextNoteTitle, mTextNoteText);
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        saveChanges();
+    }
+
+    private void saveChanges() {
+        mNote.setCourse((CourseInfo) mSpinnerCourses.getSelectedItem());
+        mNote.setTitle(mTextNoteTitle.getText().toString());
+        mNote.setText(mTextNoteText.getText().toString());
+    }
+
     /**
      * Use to populate our Activity UI
      *
@@ -76,8 +88,17 @@ public class NoteActivity extends AppCompatActivity {
         Intent intent = getIntent();
         int position = intent.getIntExtra(NOTE_POSITION, POSITION_NOT_SET);
         mIsNewNote = position == POSITION_NOT_SET;
-        if (!mIsNewNote)
+        if (mIsNewNote) {
+            createNewNote();
+        } else {
             mNote = DataManager.getInstance().getNotes().get(position);
+        }
+    }
+
+    private void createNewNote() {
+        DataManager dm = DataManager.getInstance();
+        int newNotePosition = dm.createNewNote();
+        mNote = dm.getNotes().get(newNotePosition);
     }
 
     @Override

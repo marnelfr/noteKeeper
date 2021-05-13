@@ -290,5 +290,5 @@ When handling new entries, we create that new entry in our activity's **onCreate
 
 
 
-
+In intellij, when a method return a value, we can hit alt+v and the ask for new local variable introduction
 
