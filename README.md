@@ -277,6 +277,7 @@ Then we just handle a the onPause method of our activity.
 
 When handling new entries, we create that new entry in our activity's **onCreate** method.
 
+**finish()** is used to stop our activity. This run the **onPause** method before leaving.
 
 
 

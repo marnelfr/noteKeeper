@@ -26,6 +26,8 @@ public class NoteActivity extends AppCompatActivity {
     private Spinner mSpinnerCourses;
     private EditText mTextNoteTitle;
     private EditText mTextNoteText;
+    private boolean mIsCancelling;
+    private int mNotePosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +59,12 @@ public class NoteActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        saveChanges();
+        if (mIsCancelling) {
+            if (mIsNewNote)
+                DataManager.getInstance().removeNote(mNotePosition);
+        } else {
+            saveChanges();
+        }
     }
 
     private void saveChanges() {
@@ -86,19 +93,19 @@ public class NoteActivity extends AppCompatActivity {
      */
     private void readDisplayStateValues() {
         Intent intent = getIntent();
-        int position = intent.getIntExtra(NOTE_POSITION, POSITION_NOT_SET);
-        mIsNewNote = position == POSITION_NOT_SET;
+        mNotePosition = intent.getIntExtra(NOTE_POSITION, POSITION_NOT_SET);
+        mIsNewNote = mNotePosition == POSITION_NOT_SET;
         if (mIsNewNote) {
             createNewNote();
         } else {
-            mNote = DataManager.getInstance().getNotes().get(position);
+            mNote = DataManager.getInstance().getNotes().get(mNotePosition);
         }
     }
 
     private void createNewNote() {
         DataManager dm = DataManager.getInstance();
-        int newNotePosition = dm.createNewNote();
-        mNote = dm.getNotes().get(newNotePosition);
+        mNotePosition = dm.createNewNote();
+        mNote = dm.getNotes().get(mNotePosition);
     }
 
     @Override
@@ -119,10 +126,14 @@ public class NoteActivity extends AppCompatActivity {
         if (id == R.id.action_send_email) {
             sendEmail();
             return true;
+        } else if (id == R.id.action_cancel) {
+            mIsCancelling = true;
+            finish();
         }
 
         return super.onOptionsItemSelected(item);
     }
+
 
     private void sendEmail() {
         String subject = mTextNoteTitle.getText().toString();
