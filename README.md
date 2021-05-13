@@ -136,7 +136,7 @@ For other activities, it affects the text that appears at the top of the activit
 Using them avoid us to directly insert our string value in the _manifest_.
 
 
-## Operations with Intents
+## Operations with Intents (Explicit intent)
 **Intents** describe a desired **operation** meaning the **target** like an **activity** but with 
 sometimes, **additional information** provided by **intent extras**.\
 **Intent extras** are nothing more than name-value pairs added to the intent with the **putExtra** overloads.
@@ -198,6 +198,91 @@ the process itself will exist.
 
 Now, in the same process, there is no always the need to use parcelable to send info cross activity if those 
 activity can access the same DataManager (Unless I didn't get it well :').)
+
+
+## Implicit intent (Late-binding Components)
+Implicit intent allow us to describe an operation desired that may not be defined in our application.
+Here the target is implied based on a set of characteristics and the specific intent that's going to be
+used is not determined until the runtime: _we're talking about **late-binding**_.\
+This is possible thank to **AndroidManifest** provide by every application installed in the android system.
+There are loaded up in the system and then, using them, the system identify the best match. So
+the specific match depend on apps installed on the user's device. In cases where there's a tie, 
+the system prompts user.\
+Implicit intents decouple senders and receivers even if those two don't know about each other.
+
+### Implicit intent characteristics
+- **Action**: a string that identify the kind of activity we want to start. It's commonly set int the 
+intent constructor even if there is a setAction method available.\
+**Action** is the only required characteristic of an implicit intent.
+
+- **Category**: provides extended qualification and is not normally used by the sender but the intent
+receiver.
+
+- **Data**: provides the URI of the data to be acted upon. There are URIs for contact data,...\
+It's set through the `Intent.setData` method.
+
+- **Mime type**: provides to identify the kind of data associated with that URI. There a common or
+app-specific mine type.\
+It's set through the `Intent.setType` method.\
+**E.g.**: **message/rfc2822** is a standard Internet mime type for sending email.
+
+
+`Intent.setDataAndType` is used in case we need to specify both of them since **setData** and **setType** 
+cancel each other.
+
+The most **Common Intents** can be found at [http://bit.ly/commonintents](http://bit.ly/commonintents)
+
+
+## Activities with Results
+Some activity classes return results.\
+This is the case, for example, of the **Camera Activity** that
+- presents camera functionality
+- and returns image thumbnail
+
+or the case of the **Contact Activity** that 
+- presents contact UI
+- and returns selected contact info.
+
+Those activities are started differently than others using `startActivityForResult` method that receive:
+- Intent
+- App defined integer identifier to differentiates results within our app since with can start a couple of 
+activities in the same time.
+
+**Receiving results** it make by overriding the **onActivityResult** of your Activity class.\
+It get back three parameters:
+- **An integer** we set as the second parameter to _startActivityForResult_
+- **The result code** where **RESULT_OK** indicates success
+- **An intent** containing the activity from the other app result.
+
+**E.g.**: using the camera activity
+The intent action is **MediaStore.ACTION_IMAGE_CAPTURE**.\
+It takes the extra **MediaStore.EXTRA_OUTPUT** passed as url that specify 
+the file in which to save the full quality image 
+
+
+## Task
+**A task is a collection of activities that users interact with when performing a certain job**
+- It's managed as a stack known as the back stack.
+- Activities added going forward.
+- Back button removes Activities. 
+    - That causes activity to be destroyed then remove from the task
+    - The system will then manage the process lifetime (meaning the process will be ended if there is no another activity running on it).
+    
+    
+
+## Data persistence
+When it comes to managing persistent state, Android tends to use what is called an **edit-in-place** model. That
+means that changes are saved with no special action but just when the user leave the activity by hitting  the back button.
+Then we just handle a the onPause method of our activity. 
+
+When handling new entries, we create that new entry in our activity's **onCreate** method.
+
+
+
+
+
+
+
 
 
 
