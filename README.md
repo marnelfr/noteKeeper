@@ -329,6 +329,7 @@ at these times. So **activities provide by the state management,**
 - An opportunity to save its state before being destroyed
 - and the way to get back the saved state on restore.
 
+## onSaveInstanceState
 For **saving state**, we use the **onSaveInstanceState** method and write our activity state to the passed bundle
 into the method.
 
@@ -336,14 +337,17 @@ When **restoring state**, the saved bundle is passed into our **onCreate** metho
 But when called initially, that bundle is null.\
 Although, **the intent that created the activity remains available on restore**.
 
-
+So onSaveInstanceState save the application state **when the activity is destroyed due the a switch to 
+another application by the user**.\
 **But what about when the application is fully destroyed and then recreated ?**\
 We could use persistent store to save the state of the app but this is expensive when it comes to 
 case like simple configuration change (when switching for a new screen orientation).
 
+
 ### ViewModel
-For maintaining state across configuration changes, use **ViewModel** that stores activity state in-process
-separately from the activity. 
+For maintaining state across configuration changes, we use **ViewModel** that stores activity state in-process
+separately from the activity. In other words, **ViewModel maintains state when activity 
+get destroyed due to configuration changes** such as when the user rotates a device from portrait to landscape.
 To set up a viewModel to our activity, we create on that extends **ViewModel** and we customize it 
 by adding properties and methods specific to our activity's state requirements.\
 
@@ -352,7 +356,7 @@ And since **viewModels** are managed separately from our activity, they are acce
 - creates new instance of the viewModel when needed and provide it
 - retrieves back the existing when available.  
 
-
+?? **Names for the stored instance state values are app defined** 
 
 
 

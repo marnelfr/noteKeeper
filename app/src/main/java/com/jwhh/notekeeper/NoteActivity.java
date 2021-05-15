@@ -2,24 +2,21 @@ package com.jwhh.notekeeper;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatActivity;
-
-import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
+
 import java.util.List;
 
 public class NoteActivity extends AppCompatActivity {
 
-    //    private AppBarConfiguration appBarConfiguration;
-//    private ActivityNoteBinding binding;
     public static final String NOTE_POSITION = "com.jwhh.notekeeper.NOTE_POSITION";
     public static final int POSITION_NOT_SET = -1;
     private NoteInfo mNote;
@@ -32,6 +29,12 @@ public class NoteActivity extends AppCompatActivity {
     private NoteActivityViewModel mViewModel;
 
     @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mViewModel.saveState(outState);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
@@ -40,11 +43,16 @@ public class NoteActivity extends AppCompatActivity {
 
 
         ViewModelProvider viewModelProvider = new ViewModelProvider(
-            getViewModelStore(),
-            ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication())
+                getViewModelStore(),
+                ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication())
         );
         mViewModel = viewModelProvider.get(NoteActivityViewModel.class);
 
+        // Used to restore the activity state when it's destroy due the another application
+        if (savedInstanceState != null && !mViewModel.mIsNewViewModel)
+            mViewModel.restoreState(savedInstanceState);
+
+        mViewModel.mIsNewViewModel = false;
 
         mSpinnerCourses = findViewById(R.id.spinner_courses);
 
@@ -87,6 +95,9 @@ public class NoteActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Used to restore the activity (state) when it's destroyed due to configuration changes
+     */
     private void restoreDefaultValues() {
         CourseInfo course = DataManager.getInstance().getCourse(mViewModel.mDefaultCourseId);
         mNote.setCourse(course);
