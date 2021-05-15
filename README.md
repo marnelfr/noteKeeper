@@ -292,22 +292,23 @@ Common causes of Activity destruction
     
 ## Activity lifecycle state
 Our application can be either on
-- **Foreground**: the one the user is interact with
-- **Visible**: not longer in foreground but still visible by the user
-- **Total lifecycle**: not visible at all by the user so in kind of background
+- **Foreground lifetime**: the one the user is interact with
+- **Visible lifetime**: not longer in foreground but still visible by the user
+- **Total lifetime**: not visible at all by the user so in kind of background
+There are methods for start/end of each lifetime
 
 
 ## Activity lifecycle method
 In the basic order, we have:
 - Creator's method:
-    - **onCreate**: the first method called **only** when the **activity is launched** (first created), it put the activity in **Total lifecycle**
+    - **onCreate**: the first method called **only** when the **activity is launched** (first created), it put the activity in **Total lifetime**
     - **onStart**: is called to make the activity **visible**
     - **onResume**: called to bring the activity on **foreground**. The **activity is then running**, the one the user is interacting with.
 
 - Destroyer's method:
     - **onPause**: called when the activity's state goes from **foreground** to **visible**. 
     At this state, the **onResume** must be rerun before the activity come back to foreground.
-    - **onStop**: called when the activity's state go back from **visible** to the **total lifecycle** state. 
+    - **onStop**: called when the activity's state go back from **visible** to the **Total lifetime** state. 
     From this state, to bring the activity back in foreground,
         - the **onRestart** method is run first,
         - then the **onStart** method is run
@@ -322,7 +323,7 @@ because by the time the app reach the **visible state**, the user may leave the 
 
 
 ## Activity State Management
-Sometimes, when the system is facing resource pressure, it may destroy automatically our activities in total lifecycle 
+Sometimes, when the system is facing resource pressure, it may destroy automatically our activities in Total lifetime 
 state. But this since these activities must be restored when the user come back to them at the same state.
 For this purpose, we have some mechanism for any instance state associated with an activity to be preserved 
 at these times. So **activities provide by the state management,**
