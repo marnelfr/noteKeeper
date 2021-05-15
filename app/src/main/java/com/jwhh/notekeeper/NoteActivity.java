@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,9 +29,7 @@ public class NoteActivity extends AppCompatActivity {
     private EditText mTextNoteText;
     private boolean mIsCancelling;
     private int mNotePosition;
-    private String mDefaultCourseId;
-    private String mDefaultNoteText;
-    private String mDefaultNoteTitle;
+    private NoteActivityViewModel mViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +37,14 @@ public class NoteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_note);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+        ViewModelProvider viewModelProvider = new ViewModelProvider(
+            getViewModelStore(),
+            ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication())
+        );
+        mViewModel = viewModelProvider.get(NoteActivityViewModel.class);
+
 
         mSpinnerCourses = findViewById(R.id.spinner_courses);
 
@@ -61,9 +68,9 @@ public class NoteActivity extends AppCompatActivity {
     }
 
     private void saveDefaultValues() {
-        mDefaultCourseId = mNote.getCourse().getCourseId();
-        mDefaultNoteText = mNote.getText();
-        mDefaultNoteTitle = mNote.getTitle();
+        mViewModel.mDefaultCourseId = mNote.getCourse().getCourseId();
+        mViewModel.mDefaultNoteText = mNote.getText();
+        mViewModel.mDefaultNoteTitle = mNote.getTitle();
     }
 
     @Override
@@ -81,10 +88,10 @@ public class NoteActivity extends AppCompatActivity {
     }
 
     private void restoreDefaultValues() {
-        CourseInfo course = DataManager.getInstance().getCourse(mDefaultCourseId);
+        CourseInfo course = DataManager.getInstance().getCourse(mViewModel.mDefaultCourseId);
         mNote.setCourse(course);
-        mNote.setTitle(mDefaultNoteTitle);
-        mNote.setText(mDefaultNoteText);
+        mNote.setTitle(mViewModel.mDefaultNoteTitle);
+        mNote.setText(mViewModel.mDefaultNoteText);
     }
 
     private void saveChanges() {

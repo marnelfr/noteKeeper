@@ -321,6 +321,47 @@ But it's not a bad idea to save changes in the **onPause** method and reset valu
 because by the time the app reach the **visible state**, the user may leave the application. Changes should be lost then.
 
 
+## Activity State Management
+Sometimes, when the system is facing resource pressure, it may destroy automatically our activities in total lifecycle 
+state. But this since these activities must be restored when the user come back to them at the same state.
+For this purpose, we have some mechanism for any instance state associated with an activity to be preserved 
+at these times. So **activities provide by the state management,**
+- An opportunity to save its state before being destroyed
+- and the way to get back the saved state on restore.
+
+For **saving state**, we use the **onSaveInstanceState** method and write our activity state to the passed bundle
+into the method.
+
+When **restoring state**, the saved bundle is passed into our **onCreate** method. 
+But when called initially, that bundle is null.\
+Although, **the intent that created the activity remains available on restore**.
+
+
+**But what about when the application is fully destroyed and then recreated ?**\
+We could use persistent store to save the state of the app but this is expensive when it comes to 
+case like simple configuration change (when switching for a new screen orientation).
+
+### ViewModel
+For maintaining state across configuration changes, use **ViewModel** that stores activity state in-process
+separately from the activity. 
+To set up a viewModel to our activity, we create on that extends **ViewModel** and we customize it 
+by adding properties and methods specific to our activity's state requirements.\
+
+And since **viewModels** are managed separately from our activity, they are accessed through
+**ViewModelProvider**. It manages the VewModel instances:
+- creates new instance of the viewModel when needed and provide it
+- retrieves back the existing when available.  
+
+
+
+
+
+
+
+
+
+
+
 
 
 
