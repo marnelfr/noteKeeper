@@ -17,7 +17,7 @@ import java.util.List;
 
 public class NoteActivity extends AppCompatActivity {
 
-//    private AppBarConfiguration appBarConfiguration;
+    //    private AppBarConfiguration appBarConfiguration;
 //    private ActivityNoteBinding binding;
     public static final String NOTE_POSITION = "com.jwhh.notekeeper.NOTE_POSITION";
     public static final int POSITION_NOT_SET = -1;
@@ -28,6 +28,9 @@ public class NoteActivity extends AppCompatActivity {
     private EditText mTextNoteText;
     private boolean mIsCancelling;
     private int mNotePosition;
+    private String mDefaultCourseId;
+    private String mDefaultNoteText;
+    private String mDefaultNoteTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +51,7 @@ public class NoteActivity extends AppCompatActivity {
         mSpinnerCourses.setAdapter(adapterCourses);
 
         readDisplayStateValues();
+        saveDefaultValues();
 
         mTextNoteTitle = findViewById(R.id.text_note_title);
         mTextNoteText = findViewById(R.id.text_note_text);
@@ -56,15 +60,31 @@ public class NoteActivity extends AppCompatActivity {
             displayNotes(mSpinnerCourses, mTextNoteTitle, mTextNoteText);
     }
 
+    private void saveDefaultValues() {
+        mDefaultCourseId = mNote.getCourse().getCourseId();
+        mDefaultNoteText = mNote.getText();
+        mDefaultNoteTitle = mNote.getTitle();
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
         if (mIsCancelling) {
-            if (mIsNewNote)
+            if (mIsNewNote) {
                 DataManager.getInstance().removeNote(mNotePosition);
+            } else {
+                restoreDefaultValues();
+            }
         } else {
             saveChanges();
         }
+    }
+
+    private void restoreDefaultValues() {
+        CourseInfo course = DataManager.getInstance().getCourse(mDefaultCourseId);
+        mNote.setCourse(course);
+        mNote.setTitle(mDefaultNoteTitle);
+        mNote.setText(mDefaultNoteText);
     }
 
     private void saveChanges() {
@@ -143,7 +163,7 @@ public class NoteActivity extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("message/rfc2822");
         intent.putExtra(Intent.EXTRA_SUBJECT, subject)
-            .putExtra(Intent.EXTRA_TEXT, body);
+                .putExtra(Intent.EXTRA_TEXT, body);
         startActivity(intent);
     }
 
