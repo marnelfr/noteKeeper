@@ -323,8 +323,8 @@ because by the time the app reach the **visible state**, the user may leave the 
 
 
 ## Activity State Management
-Sometimes, when the system is facing resource pressure, it may destroy automatically our activities in Total lifetime 
-state. But this since these activities must be restored when the user come back to them at the same state.
+Sometimes, when the system is facing resource pressure, it may destroy automatically our activities in Total lifetime state.
+But these activities must be restored when the user come back to them at the same state.
 For this purpose, we have some mechanism for any instance state associated with an activity to be preserved 
 at these times. So **activities provide by the state management,**
 - An opportunity to save its state before being destroyed
@@ -376,3 +376,406 @@ And since **viewModels** are managed separately from our activity, they are acce
 
 In AS, when a method return a value, we can hit alt+v and the ask for new local variable introduction
 Let's take this a little further
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Kotlin is a java better than java.\
+It comes with a set of librairy such as the kotlin-runtime.jar needed to run the java code generated from the kotlin code.
+In kotlin, we can use function but also classes.
+
+To declare a variable we use **var**\
+To declare a constant, we use **val**\
+The type of the variable is specify after the variable name separated by a colon (:)\
+`var name:String = "Marnel"`\
+There is no semi-colon in kotlin.
+
+
+In kotlin, if is an expression. That mean it return value:
+var status = if (user.online) {
+"En ligne"
+} else {
+"Hors ligne"
+}
+
+Kotlin don't have switch but when:
+when(value){
+value1 -> println("this is $value1")
+value2 -> println("this is $value2")
+is Double -> println("the $value is of type Double")
+else -> println("None $value1 and $value2 is not provided")
+}
+
+Kotlin try-catch is also an expression
+var age = try{
+Integer.parseInt(ageStr)
+} catch(e:NumberFormatException) {
+0
+}
+
+Unless a variable is clearly defined as nullable, there is any chance it could be. To declare a variable as nullable,
+we use the question mark: var name:String? = "Marnel"
+
+Kotlin allow variable interpolation in string:
+var sentence = "The user $name is not currently online."
+var alert = "The user $name will be ${age+1} the next year."
+
+While defining classes, we can directly define the constructor value next to the class name:
+class Person(var FirstName: String, var LastName: String){
+}
+
+While instanciating a class, there is not "new" keyword:
+var person:Person? = Person("Marnel", "Gnacadja")
+
+Since person is a nullable variable, we can check if it's null while accessing its attributes:
+if(person?.FirstName == "Marnel"){ println("Salut Marnel") }
+
+In kotlin, we have the while and do-while loop.
+The for loop is a little different from other languages:
+for(i in 1..10){
+#go from 1 to 10 included
+}
+
+for (i in 1..20 step 2){
+#go from 1 to 20 by step 2
+}
+
+for (i in 1 until 20){
+#go from 1 to 19
+}
+
+for (i in 20 downTo 1){
+#go from 20 to 1
+}
+for ((index, value) in listOf(1,2,3,4).withIndexes()){
+# here, at the index = 0, value = 1
+}
+
+var eleves = TreeMap<String, Int>
+eleves["Marnel"] = 15
+for((name, avrege) in eleves){
+#we can have more than 1 value in eleves
+}
+
+
+## Functions
+Function are introduce with the keyword **fun**, can have parameter (even named parameters) and a return type.
+A function that doesn't return anything has the return type **Unit**.
+
+We have also **function expression** that can be defined in one line:
+````kotlin
+fun max(a: Int, b: Int): Int = if(a<b) b else a
+````
+
+
+## Calling from Java
+When converting a kotlin code to Java, the compiler create a class named base on the file name.
+For exemple, the content of the file Util.kt will be under an auto generated class named **UtilKt**.
+Then top level function are created inside that class as static methods.
+While compiling, classes created in the same file are sent in separete file.
+It's possible to provide the name for the generated class using an annotation at the top of the file:\
+@file:JvmName("ClassName")
+In this case, to call a method _display_ from the ClassName (in the rsk package), we will have to:
+````java
+import rsk.*;
+public class App{
+    public static void main(String[] args) {
+        ClassName.display("Hello word");
+    }
+}
+````
+
+## Default Parameters
+Here, b has a default value
+````kotlin
+@JvmOverloads
+fun max(a: Int, b: Int = 0): Int = if(a<b) b else a
+````
+Since Java don't have the concept of default value for the parameter, adding the annotation `@JvmOverloads`
+make the compiler overload the function. In this case, we'll have two static methods in java:
+- One with two parameter
+- One with one parameter **a** where a constant **b** will be set to 0 inside the method.
+
+We also have **named parameters**. When named one parameter, we've got to name all of them while calling the function:
+````kotlin
+println(max(a = 5, b = 7))
+````
+
+## Extension functions
+While other function are called **helper functions**, we have these one too.
+Here, we can add functions to class we didn't write. They are then added as static functions. So
+they don't have access to the internals of the class.
+In an extensional function, the instance on which the function will be called is accessed though **this**
+
+````kotlin
+fun main() {
+	val text = "With     multiple    \t  whitespace"
+	println(text.replaceMultipleWhiteSpace())
+}
+
+fun String.replaceMultipleWhiteSpace(): String {
+    var regex = Regex("\\s+")
+	return regex.replace(this, " ")
+}
+````
+
+
+## Infix Functions
+It's either a member or extension functions, has a single parameter, and marked with the **infix** keyword.
+Using this make our functions look like _operator_
+````kotlin
+var d = 5.5 plus 6.7
+
+infix fun Double.plus(a: Double): Double = this+a
+````
+
+Infix function lead us on to operator overloading (get from C++)
+But in kotlin, only a set of unary operators can be overloaded.
+````kotlin
+fun main(args: Array<String>) {
+	val h1 = Header("h1")
+	val h2 = Header("h2")
+	val h3 = h1 + h2
+}
+
+class Header(var Name: String) {}
+
+infix operator fun Header.plus(h: Header): Header {
+	return Header(this.Name + " " + h.Name)
+}
+````
+
+Here, we can then use the **+** in the place of using **plus**
+This is very useful if we are building **domain specific languages (DSLs) which is one thing kotlin is very good at.
+
+
+
+## Tail Recursive Functions
+In certain scenarios, when we want to use recursion, making the function **tail recursive** is extremely useful,
+and it's something Kotlin supports out of the box.
+````kotlin
+import java.math.BigIntegerimport
+fun main() {
+    println(fib(10000, BigInteger("1"), BigInteger("0")))
+}
+
+tailrec fun fib(n: Int, a: BigInteger, b: BigInteger): BigInteger {
+    return if (n == 0) b else fib(n-1, a+b, a)
+}
+````
+
+
+## Interfaces
+Here, we don't have **implements** and **extends** keyword. They are stood by **colon**.
+Interfaces support as in Java 8 default implementation of methods on the interface.
+This allows us to evolve interfaces without breaking existing code.
+````kotlin
+interface Time {
+    fun setTime(hours: Int, mins: Int = 0, secs: Int = 0)
+    fun setTime(time: NelTime) = setTime(time.Hours) //default implementation
+}
+
+interface EndOfTheWorld {
+    fun setTime(time: NelTime) {} // implement the same method as Time interface
+}
+
+class NelTime {
+    var Hours: Int = 0
+}
+
+// there is not implements or extends keyword in kotlin. Only ":" for them both
+class AfricaTime: Time, EndOfTheWorld {
+    
+	// overridden methods must be clearly specify by the "override" keyword
+	override fun setTime(time: NelTime){
+		//At least one of them must be called
+		super<EndOfTheWorld>.setTime(time)
+		super<Time>.setTime(time)
+	}
+	
+    override fun setTime(hours: Int, mins: Int, secs: Int){}
+    
+}
+````
+
+
+## Class
+Here classes are public and final by default. So they can't be inherent.\
+Kotlin also support **abstract** classes.\
+We also have **sealed classes**. These classes can only have a fixed set of derivations.
+It's like enums on steroids.\
+Classes can have multiple constructors.\
+Here classes are public and final by default. So to inherit a class, it should be made open or abstract
+Methods in classes should also be open in order to be overridden. Whilst abstract methods must be overridden,
+or the class that inherit our open class must be set as abstract also.\
+There is no **package-private** like in Java. Here packages are just a way of collecting things together.\
+However, kotlin have the idea of **internal** that makes the classes visible to everything else within the
+class' module. The module in this case could be an IntelliJ module. It's basically a compilation of all the things
+that are compiled together.
+We also have **protected** and **private** here also.
+````kotlin
+open class Person {
+	var First: String = ""
+	var Last: String = ""
+	abstract fun getName(): String
+}
+
+class Student : Person() {
+	override fun getName(): String = "$First $Last"
+}
+````
+
+
+
+## Sealed classes
+It let us restrict a class hierarchy. We can specify exactly the set of derived classes from an abstract class.
+So a sealed classe is an abstract class. But anything outside the sealed class hierarchy is not allowed to derive from it.
+That gives us very fine control over what the sealed class can exist.
+````kotlin
+sealed class Mail {
+	var time: String
+
+	fun getTime() {
+		return time
+	}
+	
+    class SendMail(id: Int, to: String): Mail()
+	class ReceiveMail(id: Int, from: String): Mail() {
+	    var receivedAt: String
+	    
+	    fun getData(): String {
+	        return id + from + receivedAt
+	    }
+	} 
+}
+
+fun handleEvent(e:Mail) = when(e) {
+    is Mail.SendMail -> print(e.to)
+	is Mail.ReceiveMail -> print(e.from)
+	// no need to have an else because we do know exactly what all the derived classes are.
+	// so we can handle each of the classes as an explicit case.
+}
+````
+
+
+## Constructors
+The default/primary/main constructor is defined as part of the class definition
+by listing its parameter directly after the class name.
+````kotlin
+class Person(val id: Int, var name: String) {}
+````
+
+We can also use the **init** function
+````kotlin
+class Person(_name: String) {
+    val name: String
+    init {
+        this.name = _name
+    }
+}
+````
+But here, we could just simply join the declaration with the assignment
+without using **init**. But while using the init function,
+we can do a lot of thing such of initializing variable, calling methods,...
+
+When listing the default constructor parameters, without saying that they are
+var or val, Kotlin doesn't automatically create property within the class to those
+parameters: **we then have to do it manually**
+
+We can also declare a second constructor inside the class using the **constructor**
+keyword.
+
+````kotlin
+class Person(var name: String) {
+	var age: Int = 0
+	constructor(_name: String, _age: Int) : this(_name) {
+	    this.age = _age
+	}
+}
+````
+
+However, it better to use default value than second constructor
+````kotlin
+class Person(var name: String, _age = 0){} //inferring the age's type to be an int
+````
+
+If we have derivation hierarchy, classes can call superclass constructors.
+````kotlin
+//first example using primary constructor
+class Student(name:String): Person(name) {
+    //no need to declare var name here. Already declared in the Person class.
+}
+
+//second example using secondary constructor
+class Student(_name:String): Person {
+    constructor(_name:String): super(_name)
+}
+````
+For derivation, if a class has a default constructor,
+we have to call that defautl constructor explicitly
+````kotlin
+class Student: Person() {}
+````
+
+**Private constructors** are also supported.\
+It's used typically to inhibit construction, be able to create
+an instance of the class differently from within the class.\
+For example, if we want a singleton instance of our class, we can have a
+private constructor and a factory object that will be used to create the class.\
+**However, in kotlin, there is usually a better way to do so**
+
+
+## Data classes
+They are declared using the **data** keyword while declaring the class.
+It allows us to store correctly the class in collections by providing
+a correct implementation of the **equals** and **hashCode** methods.
+It also overrides the **toString** method (for getting some sensible
+return from that method rather than just the address of the class).
+And it allows us to store data in the class for thing like data transfer objects for
+example that are stored in collections. Reason why we need to provide an **equals** and **hashCode**
+methods.
+
+So if we mark a class as a data class, that class provides an **equals**, **hashCode**, **copy**, and
+**toString** method. So we won't need to implement them.
+Also, these classes are **immutable**.
+````kotlin
+data class Meeting(val name:String, val location:String)
+
+val aMeeting = Meeting("A Meeting", "Porto-Novo")
+val anotherMeeting = aMeeting.copy(location = "Cotonou")
+if(aMeeting == anotherMeeting) { //work perfectly because of the equals method provided
+    print(aMeeting) //work perfectly because of the toString method provided.
+}
+````
+
+
+
+
+
+
+
+
